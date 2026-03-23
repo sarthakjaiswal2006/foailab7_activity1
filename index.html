@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Public API Playground</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       CSS VARIABLES & RESET
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080c14;
+      --bg2:       #0d1220;
+      --surface:   rgba(255,255,255,0.04);
+      --border:    rgba(255,255,255,0.08);
+      --neon-blue: #38bdf8;
+      --neon-pink: #f472b6;
+      --neon-lime: #a3e635;
+      --text:      #e8eaf2;
+      --muted:     #6b7280;
+      --radius:    18px;
+      --transition: 0.38s cubic-bezier(.4,0,.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       ANIMATED BACKGROUND BLOBS
+    ============================================================ */
+    .bg-blobs {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(120px); opacity: .18;
+      animation: blobFloat 12s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #1d4ed8; top: -200px; left: -150px; animation-delay: 0s; }
+    .blob-2 { width: 500px; height: 500px; background: #7c3aed; top: 30%; right: -150px; animation-delay: -4s; }
+    .blob-3 { width: 400px; height: 400px; background: #0f766e; bottom: -100px; left: 30%; animation-delay: -8s; }
+
+    @keyframes blobFloat {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
+    }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; height: 64px;
+      background: rgba(8,12,20,.72);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .nav-tabs {
+      display: flex; gap: 4px; list-style: none;
+    }
+
+    .nav-tab {
+      padding: 7px 18px;
+      font-size: .875rem; font-weight: 500; color: var(--muted);
+      border-radius: 999px; cursor: pointer;
+      transition: color var(--transition), background var(--transition);
+      border: 1px solid transparent;
+    }
+    .nav-tab:hover { color: var(--text); background: var(--surface); }
+    .nav-tab.active {
+      color: var(--neon-blue);
+      background: rgba(56,189,248,.1);
+      border-color: rgba(56,189,248,.25);
+    }
+
+    .nav-burger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+    }
+    .nav-burger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* ============================================================
+       SECTIONS (PAGE ROUTING)
+    ============================================================ */
+    .section {
+      display: none; opacity: 0;
+      min-height: 100vh; padding: 80px 0 40px;
+      position: relative; z-index: 1;
+    }
+    .section.active {
+      display: flex; flex-direction: column;
+      animation: fadeIn .45s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .container {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px; width: 100%;
+    }
+
+    /* ============================================================
+       HOME / HERO
+    ============================================================ */
+    #home {
+      justify-content: center; align-items: center;
+      text-align: center; gap: 0;
+    }
+
+    .hero {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 20px; padding: 60px 24px 0;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 999px;
+      background: rgba(56,189,248,.1); border: 1px solid rgba(56,189,248,.25);
+      font-size: .78rem; font-weight: 500; color: var(--neon-blue); letter-spacing: .04em;
+    }
+    .hero-badge::before {
+      content: ''; display: inline-block; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--neon-blue);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(56,189,248,.5); }
+      50%      { box-shadow: 0 0 0 6px rgba(56,189,248,0); }
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      font-weight: 800; line-height: 1.06; letter-spacing: -.03em;
+    }
+    .hero-title .grad {
+      background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-pink) 55%, #fb923c 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      max-width: 520px; font-size: 1.05rem; color: var(--muted); line-height: 1.65;
+    }
+
+    /* Home cards grid */
+    .home-cards {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 22px;
+      padding: 52px 24px 60px; max-width: 1100px; width: 100%; margin: 0 auto;
+    }
+
+    .home-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      cursor: pointer;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      position: relative; overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .home-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 70% 20%, var(--card-glow), transparent 65%);
+      opacity: 0; transition: opacity var(--transition);
+    }
+    .home-card:hover::before { opacity: 1; }
+    .home-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--card-accent);
+      box-shadow: 0 24px 60px -12px rgba(0,0,0,.55), 0 0 0 1px var(--card-accent);
+    }
+    .home-card:active { transform: translateY(-2px) scale(1.00); }
+
+    .home-card.dog   { --card-accent: var(--neon-lime);  --card-glow: rgba(163,230,53,.15); }
+    .home-card.joke  { --card-accent: var(--neon-pink);  --card-glow: rgba(244,114,182,.15); }
+    .home-card.user  { --card-accent: var(--neon-blue);  --card-glow: rgba(56,189,248,.15); }
+
+    .card-icon {
+      font-size: 2.4rem; margin-bottom: 16px; display: block;
+      filter: drop-shadow(0 0 12px var(--card-accent));
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .card-desc { font-size: .875rem; color: var(--muted); line-height: 1.6; }
+
+    .card-arrow {
+      position: absolute; bottom: 22px; right: 24px;
+      font-size: 1.3rem; color: var(--card-accent); opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .home-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+    /* ============================================================
+       API SECTION PAGES
+    ============================================================ */
+    .page-header {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 52px 24px 40px; gap: 10px;
+    }
+
+    .page-tag {
+      font-size: .75rem; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent-color);
+      background: var(--accent-bg); border: 1px solid var(--accent-border);
+      padding: 4px 14px; border-radius: 999px;
+    }
+
+    .page-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(1.9rem,4vw,3rem);
+      font-weight: 800; letter-spacing: -.02em;
+    }
+    .page-desc { color: var(--muted); font-size: .95rem; max-width: 400px; }
+
+    /* API content card */
+    .api-card {
+      background: var(--surface); backdrop-filter: blur(16px);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 36px; max-width: 700px; margin: 0 auto 40px; width: 100%;
+      position: relative; overflow: hidden;
+    }
+    .api-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 28px; border-radius: 999px; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 500;
+      cursor: pointer; transition: all var(--transition); position: relative;
+      letter-spacing: .01em; outline: none;
+    }
+    .btn:active { transform: scale(.96); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-color), var(--accent-color2, var(--accent-color)));
+      color: #fff;
+      box-shadow: 0 4px 20px -4px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 8px 32px -4px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,.08); border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+
+    /* ============================================================
+       DOG SECTION
+    ============================================================ */
+    #dog {
+      --accent-color: var(--neon-lime);
+      --accent-color2: #4ade80;
+      --accent-glow: rgba(163,230,53,.45);
+      --accent-bg: rgba(163,230,53,.08);
+      --accent-border: rgba(163,230,53,.2);
+    }
+
+    .dog-display {
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      min-height: 100px;
+    }
+
+    .dog-img-wrap {
+      position: relative; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,.5);
+      width: 100%; max-width: 420px;
+    }
+    .dog-img-wrap img {
+      width: 100%; max-height: 340px; object-fit: cover; display: block;
+      transition: transform .55s ease;
+    }
+    .dog-img-wrap:hover img { transform: scale(1.05); }
+
+    .dog-breed {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 20px; border-radius: 999px;
+      background: rgba(163,230,53,.1); border: 1px solid rgba(163,230,53,.25);
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+      color: var(--neon-lime); text-transform: capitalize;
+    }
+
+    /* Six-dog grid */
+    .dog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+
+    .dog-grid-item {
+      display: flex; flex-direction: column; gap: 8px; align-items: center;
+      opacity: 0; transform: translateY(14px) scale(.97);
+      animation: gridItemIn .42s ease forwards;
+    }
+    /* Stagger each card */
+    .dog-grid-item:nth-child(1) { animation-delay: .04s; }
+    .dog-grid-item:nth-child(2) { animation-delay: .10s; }
+    .dog-grid-item:nth-child(3) { animation-delay: .16s; }
+    .dog-grid-item:nth-child(4) { animation-delay: .22s; }
+    .dog-grid-item:nth-child(5) { animation-delay: .28s; }
+    .dog-grid-item:nth-child(6) { animation-delay: .34s; }
+
+    @keyframes gridItemIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .dog-grid-img-wrap {
+      position: relative; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0,0,0,.5); width: 100%;
+    }
+    .dog-grid-img-wrap img {
+      width: 100%; height: 160px; object-fit: cover; display: block;
+      transition: transform .5s ease;
+    }
+    .dog-grid-img-wrap:hover img { transform: scale(1.07); }
+
+    .dog-grid-breed {
+      font-size: .75rem; font-weight: 600; text-align: center;
+      color: var(--neon-lime); text-transform: capitalize;
+      background: rgba(163,230,53,.08); border: 1px solid rgba(163,230,53,.18);
+      border-radius: 999px; padding: 3px 10px; letter-spacing: .02em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* Widen the api-card when showing the grid */
+    .api-card.grid-mode { max-width: 900px; }
+
+    @media (max-width: 600px) {
+      .dog-grid { grid-template-columns: repeat(2, 1fr); }
+      .dog-grid-img-wrap img { height: 130px; }
+    }
+
+    /* ============================================================
+       JOKE SECTION
+    ============================================================ */
+    #joke {
+      --accent-color: var(--neon-pink);
+      --accent-color2: #e879f9;
+      --accent-glow: rgba(244,114,182,.45);
+      --accent-bg: rgba(244,114,182,.08);
+      --accent-border: rgba(244,114,182,.2);
+    }
+
+    .joke-setup {
+      font-size: 1.15rem; font-weight: 500; line-height: 1.6;
+      color: var(--text); margin-bottom: 20px;
+      padding-bottom: 20px; border-bottom: 1px solid var(--border);
+    }
+
+    .joke-punchline {
+      font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700;
+      color: var(--neon-pink); line-height: 1.5;
+      animation: punchReveal .5s ease;
+    }
+    @keyframes punchReveal {
+      from { opacity:0; transform: translateY(8px) scale(.98); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    .joke-reveal-btn {
+      margin: 16px auto 0; display: block;
+    }
+
+    /* ============================================================
+       USER SECTION
+    ============================================================ */
+    #user {
+      --accent-color: var(--neon-blue);
+      --accent-color2: #818cf8;
+      --accent-glow: rgba(56,189,248,.45);
+      --accent-bg: rgba(56,189,248,.08);
+      --accent-border: rgba(56,189,248,.2);
+    }
+
+    .user-profile {
+      display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start;
+    }
+
+    .user-avatar-wrap {
+      position: relative;
+    }
+    .user-avatar {
+      width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+      border: 3px solid rgba(56,189,248,.4);
+      box-shadow: 0 0 24px rgba(56,189,248,.3);
+      display: block; transition: transform .4s ease, box-shadow .4s ease;
+    }
+    .user-avatar:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 36px rgba(56,189,248,.5);
+    }
+    .user-online {
+      position: absolute; bottom: 4px; right: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #22c55e; border: 2px solid var(--bg);
+    }
+
+    .user-info { display: flex; flex-direction: column; gap: 12px; }
+
+    .user-name {
+      font-family: 'Syne', sans-serif; font-size: 1.45rem; font-weight: 800;
+    }
+
+    .user-meta {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .user-meta-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .9rem; color: var(--muted);
+    }
+    .user-meta-item .icon { font-size: 1rem; min-width: 20px; }
+    .user-meta-item span { color: var(--text); }
+
+    /* ============================================================
+       LOADING SPINNER
+    ============================================================ */
+    .loading {
+      display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 36px 0;
+    }
+    .spinner {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.08);
+      border-top-color: var(--accent-color, var(--neon-blue));
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: .875rem; color: var(--muted); }
+
+    /* ============================================================
+       ERROR STATE
+    ============================================================ */
+    .error-box {
+      background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25);
+      border-radius: 12px; padding: 20px; text-align: center;
+      color: #f87171; font-size: .9rem;
+    }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: rgba(30,35,48,.95); border: 1px solid var(--border);
+      backdrop-filter: blur(16px); color: var(--text);
+      padding: 12px 24px; border-radius: 999px; font-size: .875rem;
+      z-index: 999; transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .35s;
+      opacity: 0; pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 28px 24px;
+      border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--muted);
+    }
+    footer span { color: var(--neon-pink); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-tabs { display: none; position: absolute; top: 64px; left: 0; right: 0;
+        flex-direction: column; background: rgba(8,12,20,.97); backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border); padding: 12px;
+        gap: 2px;
+      }
+      .nav-tabs.open { display: flex; }
+      .nav-tab { border-radius: 10px; padding: 12px 16px; }
+      .nav-burger { display: flex; }
+      .home-cards { grid-template-columns: 1fr; max-width: 420px; }
+      .user-profile { grid-template-columns: 1fr; }
+      .api-card { padding: 24px 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 2.1rem; }
+    }
+
+    /* ============================================================
+       MISC UTILITIES
+    ============================================================ */
+    .hidden { display: none !important; }
+    .text-center { text-align: center; }
+    .mt-4 { margin-top: 16px; }
+    .mt-6 { margin-top: 24px; }
+  </style>
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+  <nav>
+    <div class="nav-logo" onclick="navigate('home')">API Playground</div>
+    <ul class="nav-tabs" id="navTabs">
+      <li class="nav-tab active" data-target="home"  onclick="navigate('home')">Home</li>
+      <li class="nav-tab"        data-target="dog"   onclick="navigate('dog')">🐾 Dog API</li>
+      <li class="nav-tab"        data-target="joke"  onclick="navigate('joke')">😂 Joke API</li>
+      <li class="nav-tab"        data-target="user"  onclick="navigate('user')">👤 User API</li>
+    </ul>
+    <div class="nav-burger" id="burger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HOME SECTION
+  ============================================================ -->
+  <section class="section active" id="home">
+    <div class="hero">
+      <div class="hero-badge">Live API Demos</div>
+      <h1 class="hero-title">
+        Public API<br><span class="grad">Playground</span>
+      </h1>
+      <p class="hero-sub">
+        Explore real-time APIs with interactive demos — beautiful UI, zero backend.
+      </p>
+    </div>
+
+    <!-- Feature cards navigating to sections -->
+    <div class="home-cards">
+      <div class="home-card dog" onclick="navigate('dog')">
+        <span class="card-icon">🐶</span>
+        <div class="card-title">Dog Finder</div>
+        <div class="card-desc">Fetch random dog photos from the Dog CEO API. Discover breeds with a single click.</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <div class="home-card joke" onclick="navigate('joke')">
+        <span class="card-icon">😂</span>
+        <div class="card-title">Joke Generator</div>
+        <div class="card-desc">Pull random setup & punchline jokes. Warning: may cause involuntary laughter.</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <div class="home-card user" onclick="navigate('user')">
+        <span class="card-icon">👤</span>
+        <div class="card-title">Random User</div>
+        <div class="card-desc">Generate random user profiles with photos, emails, and location data.</div>
+        <span class="card-arrow">→</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       DOG SECTION
+  ============================================================ -->
+  <section class="section" id="dog">
+    <div class="container">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="page-tag">Dog CEO API</div>
+        <h2 class="page-title">Dog Finder 🐶</h2>
+        <p class="page-desc">Discover adorable random dog photos and their breeds instantly.</p>
+      </div>
+
+      <!-- Card -->
+      <div class="api-card">
+        <!-- Action buttons -->
+        <div class="btn-group" style="margin-bottom:28px;">
+          <button class="btn btn-primary" onclick="fetchDog()">
+            <span>🐾</span> Get Dog
+          </button>
+          <button class="btn btn-ghost" onclick="fetchSixDogs()">
+            <span>🐶</span> Get 6 Dogs
+          </button>
+          <button class="btn btn-ghost" id="copyDogBtn" onclick="copyDogUrl()" style="display:none;">
+            📋 Copy Image URL
+          </button>
+        </div>
+
+        <!-- Output area -->
+        <div class="dog-display" id="dogOutput">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       JOKE SECTION
+  ============================================================ -->
+  <section class="section" id="joke">
+    <div class="container">
+      <div class="page-header">
+        <div class="page-tag">Official Joke API</div>
+        <h2 class="page-title">Joke Generator 😂</h2>
+        <p class="page-desc">Random two-part jokes served fresh. The punchline is always worth the wait.</p>
+      </div>
+
+      <div class="api-card">
+        <div class="btn-group" style="margin-bottom:28px;">
+          <button class="btn btn-primary" onclick="fetchJoke()">
+            <span>🎲</span> Get Joke
+          </button>
+          <button class="btn btn-ghost" id="nextJokeBtn" onclick="fetchJoke()" style="display:none;">
+            ⏭ Next Joke
+          </button>
+        </div>
+
+        <div id="jokeOutput"><!-- Populated by JS --></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       USER SECTION
+  ============================================================ -->
+  <section class="section" id="user">
+    <div class="container">
+      <div class="page-header">
+        <div class="page-tag">Random User API</div>
+        <h2 class="page-title">Random User Profile 👤</h2>
+        <p class="page-desc">Generate realistic random user profiles complete with photos and details.</p>
+      </div>
+
+      <div class="api-card">
+        <div class="btn-group" style="margin-bottom:28px;">
+          <button class="btn btn-primary" onclick="fetchUser()">
+            <span>✨</span> Get User
+          </button>
+          <button class="btn btn-ghost" id="nextUserBtn" onclick="fetchUser()" style="display:none;">
+            🔄 New User
+          </button>
+        </div>
+
+        <div id="userOutput"><!-- Populated by JS --></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    Built with <span>♥</span> using Public APIs &nbsp;·&nbsp; No backend required
+  </footer>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    // Current dog image URL for copy feature
+    let currentDogUrl = '';
+
+    /**
+     * Navigate to a named section, updating active states.
+     * @param {string} sectionId - ID of the section to show
+     */
+    function navigate(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      // Show target
+      const target = document.getElementById(sectionId);
+      if (target) target.classList.add('active');
+
+      // Update nav tabs
+      document.querySelectorAll('.nav-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.target === sectionId);
+      });
+
+      // Close mobile menu if open
+      closeMenu();
+
+      // Scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ============================================================
+       MOBILE NAV TOGGLE
+    ============================================================ */
+    function toggleMenu() {
+      document.getElementById('navTabs').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('navTabs').classList.remove('open');
+    }
+
+    /* ============================================================
+       TOAST NOTIFICATION
+    ============================================================ */
+    /**
+     * Show a brief toast message.
+     * @param {string} msg - Message to display
+     */
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    /* ============================================================
+       LOADING & ERROR HELPERS
+    ============================================================ */
+    /**
+     * Render a loading spinner into a given element.
+     * @param {HTMLElement} el - Target element
+     */
+    function showLoading(el) {
+      el.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <div class="loading-text">Fetching data…</div>
+        </div>`;
+    }
+
+    /**
+     * Render an error message into a given element.
+     * @param {HTMLElement} el - Target element
+     * @param {string} msg - Error message
+     */
+    function showError(el, msg) {
+      el.innerHTML = `<div class="error-box">⚠️ ${msg}</div>`;
+    }
+
+    /* ============================================================
+       DOG API
+    ============================================================ */
+    /**
+     * Extract breed name from Dog CEO image URL.
+     * URLs look like: https://images.dog.ceo/breeds/retriever-golden/...jpg
+     * @param {string} url
+     * @returns {string} Formatted breed name
+     */
+    function extractBreed(url) {
+      try {
+        const parts = url.split('/breeds/')[1].split('/')[0];
+        return parts.split('-').reverse().join(' ');
+      } catch {
+        return 'Unknown Breed';
+      }
+    }
+
+    /**
+     * Fetch a random dog image and render it.
+     */
+    async function fetchDog() {
+      const output = document.getElementById('dogOutput');
+      const card   = output.closest('.api-card');
+      card.classList.remove('grid-mode');
+      showLoading(output);
+      document.getElementById('copyDogBtn').style.display = 'none';
+
+      try {
+        const res = await fetch('https://dog.ceo/api/breeds/image/random');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        currentDogUrl = data.message;
+        const breed = extractBreed(currentDogUrl);
+
+        output.innerHTML = `
+          <div class="dog-img-wrap">
+            <img src="${currentDogUrl}" alt="${breed}" loading="lazy" />
+          </div>
+          <div class="dog-breed">🐕 ${breed}</div>
+        `;
+        document.getElementById('copyDogBtn').style.display = 'inline-flex';
+      } catch (err) {
+        showError(output, `Couldn't fetch dog image. ${err.message}`);
+      }
+    }
+
+    /**
+     * Fetch 6 random dog images in parallel and render them in a grid.
+     */
+    async function fetchSixDogs() {
+      const output = document.getElementById('dogOutput');
+      const card   = output.closest('.api-card');
+      card.classList.add('grid-mode');
+      document.getElementById('copyDogBtn').style.display = 'none';
+      showLoading(output);
+
+      try {
+        // Fire 6 requests simultaneously with Promise.all
+        const requests = Array.from({ length: 6 }, () =>
+          fetch('https://dog.ceo/api/breeds/image/random').then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+          })
+        );
+        const results = await Promise.all(requests);
+
+        // Build grid HTML
+        const items = results.map(data => {
+          const url   = data.message;
+          const breed = extractBreed(url);
+          return `
+            <div class="dog-grid-item">
+              <div class="dog-grid-img-wrap">
+                <img src="${url}" alt="${breed}" loading="lazy" />
+              </div>
+              <div class="dog-grid-breed">🐕 ${breed}</div>
+            </div>`;
+        }).join('');
+
+        output.innerHTML = `<div class="dog-grid">${items}</div>`;
+      } catch (err) {
+        card.classList.remove('grid-mode');
+        showError(output, `Couldn't fetch dogs. ${err.message}`);
+      }
+    }
+
+    /**
+     * Copy the current dog image URL to clipboard.
+     */
+    async function copyDogUrl() {
+      if (!currentDogUrl) return;
+      try {
+        await navigator.clipboard.writeText(currentDogUrl);
+        showToast('✅ Image URL copied!');
+      } catch {
+        showToast('❌ Copy failed — try manually.');
+      }
+    }
+
+    /* ============================================================
+       JOKE API
+    ============================================================ */
+    /**
+     * Fetch a random joke and render setup + punchline.
+     */
+    async function fetchJoke() {
+      const output = document.getElementById('jokeOutput');
+      showLoading(output);
+      document.getElementById('nextJokeBtn').style.display = 'none';
+
+      try {
+        const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        output.innerHTML = `
+          <p class="joke-setup">💬 ${data.setup}</p>
+          <p class="joke-punchline">🎯 ${data.punchline}</p>
+        `;
+        document.getElementById('nextJokeBtn').style.display = 'inline-flex';
+      } catch (err) {
+        showError(output, `Couldn't load joke. ${err.message}`);
+      }
+    }
+
+    /* ============================================================
+       USER API
+    ============================================================ */
+    /**
+     * Fetch a random user profile and render it.
+     */
+    async function fetchUser() {
+      const output = document.getElementById('userOutput');
+      showLoading(output);
+      document.getElementById('nextUserBtn').style.display = 'none';
+
+      try {
+        const res = await fetch('https://randomuser.me/api/');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const u = data.results[0];
+
+        const fullName = `${u.name.first} ${u.name.last}`;
+        const email    = u.email;
+        const country  = u.location.country;
+        const age      = u.dob.age;
+        const phone    = u.phone;
+        const picture  = u.picture.large;
+
+        output.innerHTML = `
+          <div class="user-profile">
+            <div class="user-avatar-wrap">
+              <img class="user-avatar" src="${picture}" alt="${fullName}" />
+              <div class="user-online"></div>
+            </div>
+            <div class="user-info">
+              <div class="user-name">${fullName}</div>
+              <div class="user-meta">
+                <div class="user-meta-item">
+                  <span class="icon">✉️</span>
+                  <span>${email}</span>
+                </div>
+                <div class="user-meta-item">
+                  <span class="icon">🌍</span>
+                  <span>${country}</span>
+                </div>
+                <div class="user-meta-item">
+                  <span class="icon">🎂</span>
+                  <span>${age} years old</span>
+                </div>
+                <div class="user-meta-item">
+                  <span class="icon">📞</span>
+                  <span>${phone}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.getElementById('nextUserBtn').style.display = 'inline-flex';
+      } catch (err) {
+        showError(output, `Couldn't fetch user profile. ${err.message}`);
+      }
+    }
+  </script>
+</body>
+</html>
