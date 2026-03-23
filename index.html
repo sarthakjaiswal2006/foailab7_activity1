@@ -10,7 +10,7 @@
        CSS VARIABLES & RESET
     ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
     :root {
       --bg:        #080c14;
       --bg2:       #0d1220;
@@ -24,9 +24,9 @@
       --radius:    18px;
       --transition: 0.38s cubic-bezier(.4,0,.2,1);
     }
-
+ 
     html { scroll-behavior: smooth; }
-
+ 
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
@@ -34,7 +34,7 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
+ 
     /* ============================================================
        ANIMATED BACKGROUND BLOBS
     ============================================================ */
@@ -48,12 +48,12 @@
     .blob-1 { width: 600px; height: 600px; background: #1d4ed8; top: -200px; left: -150px; animation-delay: 0s; }
     .blob-2 { width: 500px; height: 500px; background: #7c3aed; top: 30%; right: -150px; animation-delay: -4s; }
     .blob-3 { width: 400px; height: 400px; background: #0f766e; bottom: -100px; left: 30%; animation-delay: -8s; }
-
+ 
     @keyframes blobFloat {
       from { transform: translate(0,0) scale(1); }
       to   { transform: translate(40px, 30px) scale(1.08); }
     }
-
+ 
     /* ============================================================
        NAVBAR
     ============================================================ */
@@ -65,7 +65,7 @@
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
-
+ 
     .nav-logo {
       font-family: 'Syne', sans-serif;
       font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em;
@@ -73,11 +73,11 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       cursor: pointer;
     }
-
+ 
     .nav-tabs {
       display: flex; gap: 4px; list-style: none;
     }
-
+ 
     .nav-tab {
       padding: 7px 18px;
       font-size: .875rem; font-weight: 500; color: var(--muted);
@@ -91,7 +91,7 @@
       background: rgba(56,189,248,.1);
       border-color: rgba(56,189,248,.25);
     }
-
+ 
     .nav-burger {
       display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
     }
@@ -100,7 +100,7 @@
       background: var(--text); border-radius: 2px;
       transition: var(--transition);
     }
-
+ 
     /* ============================================================
        SECTIONS (PAGE ROUTING)
     ============================================================ */
@@ -113,16 +113,16 @@
       display: flex; flex-direction: column;
       animation: fadeIn .45s ease forwards;
     }
-
+ 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
+ 
     .container {
       max-width: 1100px; margin: 0 auto; padding: 0 24px; width: 100%;
     }
-
+ 
     /* ============================================================
        HOME / HERO
     ============================================================ */
@@ -130,12 +130,12 @@
       justify-content: center; align-items: center;
       text-align: center; gap: 0;
     }
-
+ 
     .hero {
       display: flex; flex-direction: column; align-items: center;
       gap: 20px; padding: 60px 24px 0;
     }
-
+ 
     .hero-badge {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 5px 14px; border-radius: 999px;
@@ -151,7 +151,7 @@
       0%,100% { box-shadow: 0 0 0 0 rgba(56,189,248,.5); }
       50%      { box-shadow: 0 0 0 6px rgba(56,189,248,0); }
     }
-
+ 
     .hero-title {
       font-family: 'Syne', sans-serif;
       font-size: clamp(2.6rem, 6vw, 5rem);
@@ -161,17 +161,17 @@
       background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-pink) 55%, #fb923c 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
+ 
     .hero-sub {
       max-width: 520px; font-size: 1.05rem; color: var(--muted); line-height: 1.65;
     }
-
+ 
     /* Home cards grid */
     .home-cards {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 22px;
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 22px;
       padding: 52px 24px 60px; max-width: 1100px; width: 100%; margin: 0 auto;
     }
-
+ 
     .home-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -195,11 +195,12 @@
       box-shadow: 0 24px 60px -12px rgba(0,0,0,.55), 0 0 0 1px var(--card-accent);
     }
     .home-card:active { transform: translateY(-2px) scale(1.00); }
-
+ 
     .home-card.dog   { --card-accent: var(--neon-lime);  --card-glow: rgba(163,230,53,.15); }
     .home-card.joke  { --card-accent: var(--neon-pink);  --card-glow: rgba(244,114,182,.15); }
     .home-card.user  { --card-accent: var(--neon-blue);  --card-glow: rgba(56,189,248,.15); }
-
+    .home-card.posts { --card-accent: #fb923c;           --card-glow: rgba(251,146,60,.15); }
+ 
     .card-icon {
       font-size: 2.4rem; margin-bottom: 16px; display: block;
       filter: drop-shadow(0 0 12px var(--card-accent));
@@ -209,7 +210,7 @@
       margin-bottom: 8px;
     }
     .card-desc { font-size: .875rem; color: var(--muted); line-height: 1.6; }
-
+ 
     .card-arrow {
       position: absolute; bottom: 22px; right: 24px;
       font-size: 1.3rem; color: var(--card-accent); opacity: 0;
@@ -217,7 +218,7 @@
       transition: opacity var(--transition), transform var(--transition);
     }
     .home-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
-
+ 
     /* ============================================================
        API SECTION PAGES
     ============================================================ */
@@ -225,20 +226,20 @@
       display: flex; flex-direction: column; align-items: center;
       text-align: center; padding: 52px 24px 40px; gap: 10px;
     }
-
+ 
     .page-tag {
       font-size: .75rem; font-weight: 600; letter-spacing: .1em;
       text-transform: uppercase; color: var(--accent-color);
       background: var(--accent-bg); border: 1px solid var(--accent-border);
       padding: 4px 14px; border-radius: 999px;
     }
-
+ 
     .page-title {
       font-family: 'Syne', sans-serif; font-size: clamp(1.9rem,4vw,3rem);
       font-weight: 800; letter-spacing: -.02em;
     }
     .page-desc { color: var(--muted); font-size: .95rem; max-width: 400px; }
-
+ 
     /* API content card */
     .api-card {
       background: var(--surface); backdrop-filter: blur(16px);
@@ -251,7 +252,7 @@
       position: absolute; top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
     }
-
+ 
     /* ============================================================
        BUTTONS
     ============================================================ */
@@ -263,7 +264,7 @@
       letter-spacing: .01em; outline: none;
     }
     .btn:active { transform: scale(.96); }
-
+ 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent-color), var(--accent-color2, var(--accent-color)));
       color: #fff;
@@ -273,7 +274,7 @@
       box-shadow: 0 8px 32px -4px var(--accent-glow);
       transform: translateY(-2px);
     }
-
+ 
     .btn-ghost {
       background: var(--surface); border: 1px solid var(--border); color: var(--text);
     }
@@ -281,9 +282,9 @@
       background: rgba(255,255,255,.08); border-color: var(--accent-color);
       color: var(--accent-color);
     }
-
+ 
     .btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
-
+ 
     /* ============================================================
        DOG SECTION
     ============================================================ */
@@ -294,12 +295,12 @@
       --accent-bg: rgba(163,230,53,.08);
       --accent-border: rgba(163,230,53,.2);
     }
-
+ 
     .dog-display {
       display: flex; flex-direction: column; align-items: center; gap: 20px;
       min-height: 100px;
     }
-
+ 
     .dog-img-wrap {
       position: relative; border-radius: 14px; overflow: hidden;
       box-shadow: 0 16px 48px rgba(0,0,0,.5);
@@ -310,7 +311,7 @@
       transition: transform .55s ease;
     }
     .dog-img-wrap:hover img { transform: scale(1.05); }
-
+ 
     .dog-breed {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 20px; border-radius: 999px;
@@ -318,7 +319,7 @@
       font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
       color: var(--neon-lime); text-transform: capitalize;
     }
-
+ 
     /* Six-dog grid */
     .dog-grid {
       display: grid;
@@ -326,7 +327,7 @@
       gap: 16px;
       width: 100%;
     }
-
+ 
     .dog-grid-item {
       display: flex; flex-direction: column; gap: 8px; align-items: center;
       opacity: 0; transform: translateY(14px) scale(.97);
@@ -339,11 +340,11 @@
     .dog-grid-item:nth-child(4) { animation-delay: .22s; }
     .dog-grid-item:nth-child(5) { animation-delay: .28s; }
     .dog-grid-item:nth-child(6) { animation-delay: .34s; }
-
+ 
     @keyframes gridItemIn {
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
-
+ 
     .dog-grid-img-wrap {
       position: relative; border-radius: 12px; overflow: hidden;
       box-shadow: 0 8px 28px rgba(0,0,0,.5); width: 100%;
@@ -353,7 +354,7 @@
       transition: transform .5s ease;
     }
     .dog-grid-img-wrap:hover img { transform: scale(1.07); }
-
+ 
     .dog-grid-breed {
       font-size: .75rem; font-weight: 600; text-align: center;
       color: var(--neon-lime); text-transform: capitalize;
@@ -362,15 +363,15 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       max-width: 100%;
     }
-
+ 
     /* Widen the api-card when showing the grid */
     .api-card.grid-mode { max-width: 900px; }
-
+ 
     @media (max-width: 600px) {
       .dog-grid { grid-template-columns: repeat(2, 1fr); }
       .dog-grid-img-wrap img { height: 130px; }
     }
-
+ 
     /* ============================================================
        JOKE SECTION
     ============================================================ */
@@ -381,13 +382,13 @@
       --accent-bg: rgba(244,114,182,.08);
       --accent-border: rgba(244,114,182,.2);
     }
-
+ 
     .joke-setup {
       font-size: 1.15rem; font-weight: 500; line-height: 1.6;
       color: var(--text); margin-bottom: 20px;
       padding-bottom: 20px; border-bottom: 1px solid var(--border);
     }
-
+ 
     .joke-punchline {
       font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700;
       color: var(--neon-pink); line-height: 1.5;
@@ -397,11 +398,11 @@
       from { opacity:0; transform: translateY(8px) scale(.98); }
       to   { opacity:1; transform: translateY(0) scale(1); }
     }
-
+ 
     .joke-reveal-btn {
       margin: 16px auto 0; display: block;
     }
-
+ 
     /* ============================================================
        USER SECTION
     ============================================================ */
@@ -412,11 +413,11 @@
       --accent-bg: rgba(56,189,248,.08);
       --accent-border: rgba(56,189,248,.2);
     }
-
+ 
     .user-profile {
       display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start;
     }
-
+ 
     .user-avatar-wrap {
       position: relative;
     }
@@ -435,13 +436,13 @@
       width: 16px; height: 16px; border-radius: 50%;
       background: #22c55e; border: 2px solid var(--bg);
     }
-
+ 
     .user-info { display: flex; flex-direction: column; gap: 12px; }
-
+ 
     .user-name {
       font-family: 'Syne', sans-serif; font-size: 1.45rem; font-weight: 800;
     }
-
+ 
     .user-meta {
       display: flex; flex-direction: column; gap: 8px;
     }
@@ -451,7 +452,61 @@
     }
     .user-meta-item .icon { font-size: 1rem; min-width: 20px; }
     .user-meta-item span { color: var(--text); }
-
+ 
+    /* ============================================================
+       POSTS SECTION
+    ============================================================ */
+    #posts {
+      --accent-color: #fb923c;
+      --accent-color2: #f97316;
+      --accent-glow: rgba(251,146,60,.45);
+      --accent-bg: rgba(251,146,60,.08);
+      --accent-border: rgba(251,146,60,.2);
+    }
+ 
+    /* Post ID badge */
+    .post-id-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 999px;
+      background: rgba(251,146,60,.1); border: 1px solid rgba(251,146,60,.22);
+      font-size: .75rem; font-weight: 600; letter-spacing: .06em;
+      color: #fb923c; text-transform: uppercase; margin-bottom: 18px;
+    }
+ 
+    .post-content {
+      animation: fadeIn .4s ease forwards;
+    }
+ 
+    .post-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem; font-weight: 700; line-height: 1.4;
+      color: var(--text); margin-bottom: 16px;
+      text-transform: capitalize;
+    }
+ 
+    .post-divider {
+      height: 1px; background: var(--border); margin-bottom: 16px;
+    }
+ 
+    .post-body {
+      font-size: .95rem; color: var(--muted); line-height: 1.75;
+      text-transform: capitalize;
+    }
+ 
+    .post-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--muted);
+    }
+ 
+    .post-source {
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .post-source-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #fb923c;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+ 
     /* ============================================================
        LOADING SPINNER
     ============================================================ */
@@ -466,7 +521,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text { font-size: .875rem; color: var(--muted); }
-
+ 
     /* ============================================================
        ERROR STATE
     ============================================================ */
@@ -475,7 +530,7 @@
       border-radius: 12px; padding: 20px; text-align: center;
       color: #f87171; font-size: .9rem;
     }
-
+ 
     /* ============================================================
        TOAST
     ============================================================ */
@@ -488,7 +543,7 @@
       opacity: 0; pointer-events: none;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
+ 
     /* ============================================================
        FOOTER
     ============================================================ */
@@ -499,7 +554,7 @@
       font-size: .8rem; color: var(--muted);
     }
     footer span { color: var(--neon-pink); }
-
+ 
     /* ============================================================
        RESPONSIVE
     ============================================================ */
@@ -513,15 +568,19 @@
       .nav-tabs.open { display: flex; }
       .nav-tab { border-radius: 10px; padding: 12px 16px; }
       .nav-burger { display: flex; }
-      .home-cards { grid-template-columns: 1fr; max-width: 420px; }
+      .home-cards { grid-template-columns: repeat(2, 1fr); max-width: 560px; }
       .user-profile { grid-template-columns: 1fr; }
       .api-card { padding: 24px 20px; }
     }
-
+ 
+    @media (max-width: 500px) {
+      .home-cards { grid-template-columns: 1fr; max-width: 420px; }
+    }
+ 
     @media (max-width: 480px) {
       .hero-title { font-size: 2.1rem; }
     }
-
+ 
     /* ============================================================
        MISC UTILITIES
     ============================================================ */
@@ -532,14 +591,14 @@
   </style>
 </head>
 <body>
-
+ 
   <!-- Animated background -->
   <div class="bg-blobs">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
   </div>
-
+ 
   <!-- ============================================================
        NAVBAR
   ============================================================ -->
@@ -550,12 +609,13 @@
       <li class="nav-tab"        data-target="dog"   onclick="navigate('dog')">🐾 Dog API</li>
       <li class="nav-tab"        data-target="joke"  onclick="navigate('joke')">😂 Joke API</li>
       <li class="nav-tab"        data-target="user"  onclick="navigate('user')">👤 User API</li>
+      <li class="nav-tab"        data-target="posts" onclick="navigate('posts')">📄 Posts API</li>
     </ul>
     <div class="nav-burger" id="burger" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </div>
   </nav>
-
+ 
   <!-- ============================================================
        HOME SECTION
   ============================================================ -->
@@ -569,7 +629,7 @@
         Explore real-time APIs with interactive demos — beautiful UI, zero backend.
       </p>
     </div>
-
+ 
     <!-- Feature cards navigating to sections -->
     <div class="home-cards">
       <div class="home-card dog" onclick="navigate('dog')">
@@ -590,9 +650,15 @@
         <div class="card-desc">Generate random user profiles with photos, emails, and location data.</div>
         <span class="card-arrow">→</span>
       </div>
+      <div class="home-card posts" onclick="navigate('posts')">
+        <span class="card-icon">📄</span>
+        <div class="card-title">Posts</div>
+        <div class="card-desc">Fetch sample posts from JSONPlaceholder API. Browse titles and body content.</div>
+        <span class="card-arrow">→</span>
+      </div>
     </div>
   </section>
-
+ 
   <!-- ============================================================
        DOG SECTION
   ============================================================ -->
@@ -604,7 +670,7 @@
         <h2 class="page-title">Dog Finder 🐶</h2>
         <p class="page-desc">Discover adorable random dog photos and their breeds instantly.</p>
       </div>
-
+ 
       <!-- Card -->
       <div class="api-card">
         <!-- Action buttons -->
@@ -619,7 +685,7 @@
             📋 Copy Image URL
           </button>
         </div>
-
+ 
         <!-- Output area -->
         <div class="dog-display" id="dogOutput">
           <!-- Populated by JS -->
@@ -627,7 +693,7 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- ============================================================
        JOKE SECTION
   ============================================================ -->
@@ -638,7 +704,7 @@
         <h2 class="page-title">Joke Generator 😂</h2>
         <p class="page-desc">Random two-part jokes served fresh. The punchline is always worth the wait.</p>
       </div>
-
+ 
       <div class="api-card">
         <div class="btn-group" style="margin-bottom:28px;">
           <button class="btn btn-primary" onclick="fetchJoke()">
@@ -648,12 +714,12 @@
             ⏭ Next Joke
           </button>
         </div>
-
+ 
         <div id="jokeOutput"><!-- Populated by JS --></div>
       </div>
     </div>
   </section>
-
+ 
   <!-- ============================================================
        USER SECTION
   ============================================================ -->
@@ -664,7 +730,7 @@
         <h2 class="page-title">Random User Profile 👤</h2>
         <p class="page-desc">Generate realistic random user profiles complete with photos and details.</p>
       </div>
-
+ 
       <div class="api-card">
         <div class="btn-group" style="margin-bottom:28px;">
           <button class="btn btn-primary" onclick="fetchUser()">
@@ -674,20 +740,46 @@
             🔄 New User
           </button>
         </div>
-
+ 
         <div id="userOutput"><!-- Populated by JS --></div>
       </div>
     </div>
   </section>
-
+ 
+  <!-- ============================================================
+       POSTS SECTION
+  ============================================================ -->
+  <section class="section" id="posts">
+    <div class="container">
+      <div class="page-header">
+        <div class="page-tag">JSONPlaceholder API</div>
+        <h2 class="page-title">Posts 📄</h2>
+        <p class="page-desc">Fetch sample posts from JSONPlaceholder. Real structure, mock data.</p>
+      </div>
+ 
+      <div class="api-card">
+        <div class="btn-group" style="margin-bottom:28px;">
+          <button class="btn btn-primary" onclick="fetchPost()">
+            <span>📄</span> Get Post
+          </button>
+          <button class="btn btn-ghost" id="nextPostBtn" onclick="fetchPost()" style="display:none;">
+            ⏭ Next Post
+          </button>
+        </div>
+ 
+        <div id="postOutput"><!-- Populated by JS --></div>
+      </div>
+    </div>
+  </section>
+ 
   <!-- Footer -->
   <footer>
     Built with <span>♥</span> using Public APIs &nbsp;·&nbsp; No backend required
   </footer>
-
+ 
   <!-- Toast notification -->
   <div class="toast" id="toast"></div>
-
+ 
   <!-- ============================================================
        JAVASCRIPT
   ============================================================ -->
@@ -697,7 +789,7 @@
     ============================================================ */
     // Current dog image URL for copy feature
     let currentDogUrl = '';
-
+ 
     /**
      * Navigate to a named section, updating active states.
      * @param {string} sectionId - ID of the section to show
@@ -708,19 +800,19 @@
       // Show target
       const target = document.getElementById(sectionId);
       if (target) target.classList.add('active');
-
+ 
       // Update nav tabs
       document.querySelectorAll('.nav-tab').forEach(t => {
         t.classList.toggle('active', t.dataset.target === sectionId);
       });
-
+ 
       // Close mobile menu if open
       closeMenu();
-
+ 
       // Scroll to top smoothly
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
+ 
     /* ============================================================
        MOBILE NAV TOGGLE
     ============================================================ */
@@ -730,7 +822,7 @@
     function closeMenu() {
       document.getElementById('navTabs').classList.remove('open');
     }
-
+ 
     /* ============================================================
        TOAST NOTIFICATION
     ============================================================ */
@@ -744,7 +836,7 @@
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2400);
     }
-
+ 
     /* ============================================================
        LOADING & ERROR HELPERS
     ============================================================ */
@@ -759,7 +851,7 @@
           <div class="loading-text">Fetching data…</div>
         </div>`;
     }
-
+ 
     /**
      * Render an error message into a given element.
      * @param {HTMLElement} el - Target element
@@ -768,7 +860,7 @@
     function showError(el, msg) {
       el.innerHTML = `<div class="error-box">⚠️ ${msg}</div>`;
     }
-
+ 
     /* ============================================================
        DOG API
     ============================================================ */
@@ -786,7 +878,7 @@
         return 'Unknown Breed';
       }
     }
-
+ 
     /**
      * Fetch a random dog image and render it.
      */
@@ -796,15 +888,15 @@
       card.classList.remove('grid-mode');
       showLoading(output);
       document.getElementById('copyDogBtn').style.display = 'none';
-
+ 
       try {
         const res = await fetch('https://dog.ceo/api/breeds/image/random');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-
+ 
         currentDogUrl = data.message;
         const breed = extractBreed(currentDogUrl);
-
+ 
         output.innerHTML = `
           <div class="dog-img-wrap">
             <img src="${currentDogUrl}" alt="${breed}" loading="lazy" />
@@ -816,7 +908,7 @@
         showError(output, `Couldn't fetch dog image. ${err.message}`);
       }
     }
-
+ 
     /**
      * Fetch 6 random dog images in parallel and render them in a grid.
      */
@@ -826,7 +918,7 @@
       card.classList.add('grid-mode');
       document.getElementById('copyDogBtn').style.display = 'none';
       showLoading(output);
-
+ 
       try {
         // Fire 6 requests simultaneously with Promise.all
         const requests = Array.from({ length: 6 }, () =>
@@ -836,7 +928,7 @@
           })
         );
         const results = await Promise.all(requests);
-
+ 
         // Build grid HTML
         const items = results.map(data => {
           const url   = data.message;
@@ -849,14 +941,14 @@
               <div class="dog-grid-breed">🐕 ${breed}</div>
             </div>`;
         }).join('');
-
+ 
         output.innerHTML = `<div class="dog-grid">${items}</div>`;
       } catch (err) {
         card.classList.remove('grid-mode');
         showError(output, `Couldn't fetch dogs. ${err.message}`);
       }
     }
-
+ 
     /**
      * Copy the current dog image URL to clipboard.
      */
@@ -869,7 +961,7 @@
         showToast('❌ Copy failed — try manually.');
       }
     }
-
+ 
     /* ============================================================
        JOKE API
     ============================================================ */
@@ -880,12 +972,12 @@
       const output = document.getElementById('jokeOutput');
       showLoading(output);
       document.getElementById('nextJokeBtn').style.display = 'none';
-
+ 
       try {
         const res = await fetch('https://official-joke-api.appspot.com/random_joke');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-
+ 
         output.innerHTML = `
           <p class="joke-setup">💬 ${data.setup}</p>
           <p class="joke-punchline">🎯 ${data.punchline}</p>
@@ -895,7 +987,7 @@
         showError(output, `Couldn't load joke. ${err.message}`);
       }
     }
-
+ 
     /* ============================================================
        USER API
     ============================================================ */
@@ -906,20 +998,20 @@
       const output = document.getElementById('userOutput');
       showLoading(output);
       document.getElementById('nextUserBtn').style.display = 'none';
-
+ 
       try {
         const res = await fetch('https://randomuser.me/api/');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         const u = data.results[0];
-
+ 
         const fullName = `${u.name.first} ${u.name.last}`;
         const email    = u.email;
         const country  = u.location.country;
         const age      = u.dob.age;
         const phone    = u.phone;
         const picture  = u.picture.large;
-
+ 
         output.innerHTML = `
           <div class="user-profile">
             <div class="user-avatar-wrap">
@@ -952,6 +1044,88 @@
         document.getElementById('nextUserBtn').style.display = 'inline-flex';
       } catch (err) {
         showError(output, `Couldn't fetch user profile. ${err.message}`);
+      }
+    }
+    /* ============================================================
+       POSTS API  (JSONPlaceholder + local fallback)
+    ============================================================ */
+ 
+    // Tracks which post index to show next
+    let currentPostId = 0;
+ 
+    // Local sample posts — used as fallback if the API is unreachable
+    const SAMPLE_POSTS = [
+      { id: 1, userId: 1, title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit", body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto" },
+      { id: 2, userId: 1, title: "qui est esse", body: "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla" },
+      { id: 3, userId: 1, title: "ea molestias quasi exercitationem repellat qui ipsa sit aut", body: "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut" },
+      { id: 4, userId: 1, title: "eum et est occaecati", body: "ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit" },
+      { id: 5, userId: 1, title: "nesciunt quas odio", body: "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque" },
+      { id: 6, userId: 2, title: "dolorem eum magni eos aperiam quia", body: "ut aspernatur corporis harum nihil quis provident sequi\nmollitia nobis aliquid molestiae\nperspiciatis et ea nemo ab reprehenderit accusantium quas\nvoluptate dolores velit et doloremque molestiae" },
+      { id: 7, userId: 2, title: "magnam facilis autem", body: "dolore placeat quibusdam ea quo vitae\nmagni quis enim qui quis quo nemo aut saepe\nquidem repellat excepturi ut quia\nsunt ut sequi eos ea sed quas" },
+      { id: 8, userId: 2, title: "dolorem dolore est ipsam", body: "dignissimos aperiam dolorem qui eum\nfacilis quibusdam animi sint suscipit qui sint possimus cum\nquaerat magni maiores excepturi\nipsam ut commodi dolor voluptatum modi aut vitae" },
+      { id: 9, userId: 3, title: "nesciunt iure omnis dolorem tempora et accusantium", body: "consectetur animi nesciunt iure dolore\nenim quia ad\nveniam autem ut quam aut nobis\net est aut quod aut provident voluptas autem voluptas" },
+      { id: 10, userId: 3, title: "optio molestias id quia eum", body: "quo et expedita modi cum officia vel magni\ndoloribus qui repudiandae\nvero nisi sit\nquos veniam quod sed accusamus veritatis error" },
+    ];
+ 
+    /**
+     * Render a post object into the output element.
+     * @param {object} post - Post data { id, userId, title, body }
+     * @param {boolean} fromCache - Whether this came from local fallback
+     */
+    function renderPost(post, fromCache) {
+      const output = document.getElementById('postOutput');
+      const sourceLabel = fromCache
+        ? '<span style="color:#fb923c">⚡ sample data</span>'
+        : 'jsonplaceholder.typicode.com';
+ 
+      output.innerHTML = `
+        <div class="post-content">
+          <div class="post-id-badge">📌 Post #${post.id}</div>
+          <h3 class="post-title">${post.title}</h3>
+          <div class="post-divider"></div>
+          <p class="post-body">${post.body.replace(/\n/g, '<br>')}</p>
+          <div class="post-footer">
+            <div class="post-source">
+              <span class="post-source-dot"></span>
+              ${sourceLabel}
+            </div>
+            <span>User ID: ${post.userId}</span>
+          </div>
+        </div>
+      `;
+      document.getElementById('nextPostBtn').style.display = 'inline-flex';
+    }
+ 
+    /**
+     * Fetch the next post — tries the live API first, falls back to
+     * local sample data if the network request fails (CORS, offline, etc).
+     */
+    async function fetchPost() {
+      const output = document.getElementById('postOutput');
+      document.getElementById('nextPostBtn').style.display = 'none';
+      showLoading(output);
+ 
+      // Advance index, wrapping at 100 for live API / 10 for fallback
+      currentPostId = (currentPostId % 100) + 1;
+ 
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
+ 
+        const res = await fetch(
+          `https://jsonplaceholder.typicode.com/posts/${currentPostId}`,
+          { signal: controller.signal }
+        );
+        clearTimeout(timeout);
+ 
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const post = await res.json();
+        renderPost(post, false);
+ 
+      } catch (err) {
+        // Network failed — serve from local sample data silently
+        const fallback = SAMPLE_POSTS[(currentPostId - 1) % SAMPLE_POSTS.length];
+        renderPost(fallback, true);
       }
     }
   </script>
